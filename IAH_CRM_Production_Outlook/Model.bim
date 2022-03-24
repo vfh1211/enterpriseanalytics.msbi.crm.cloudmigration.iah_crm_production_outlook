@@ -1,0 +1,1759 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1400,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "Sentry_Impala-Structured",
+        "maxConnections": -1,
+        "connectionDetails": {
+          "protocol": "odbc",
+          "address": {
+            "options": {
+              "provider": "MSDASQL",
+              "dsn": "Sentry_Impala"
+            }
+          },
+          "authentication": null
+        },
+        "credential": {
+          "AuthenticationKind": "UsernamePassword",
+          "Username": "sys_cloudsps"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "Production_Outlook",
+        "columns": [
+          {
+            "name": "Value Type",
+            "dataType": "string",
+            "sourceColumn": "value_type_dsc",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Opportunity Id",
+            "dataType": "string",
+            "sourceColumn": "opportunity_id",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Line Item",
+            "dataType": "string",
+            "sourceColumn": "line_item_id",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Opportunity Type",
+            "dataType": "string",
+            "sourceColumn": "opportunity_type_dsc",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Business Unit",
+            "dataType": "string",
+            "sourceColumn": "business_unit_cd",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Product Application",
+            "dataType": "string",
+            "sourceColumn": "product_application_nm",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Product Category",
+            "dataType": "string",
+            "sourceColumn": "product_category",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Product Status",
+            "dataType": "string",
+            "sourceColumn": "product_status_dsc",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Gregorian Year_Quarter Number",
+            "dataType": "string",
+            "sourceColumn": "gregorian_year_quarter_nbr",
+            "sortByColumn": "Gregorian Year_Quarter Order",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Range Members Year_Quarter Number",
+            "dataType": "string",
+            "sourceColumn": "range_members_year_quarter_nbr",
+            "sortByColumn": "Range Members Year_Quarter Order",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "multiplier_rte",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "multiplier_rte",
+            "sourceProviderType": "Double"
+          },
+          {
+            "name": "product_price_amt",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "product_price_amt",
+            "sourceProviderType": "Double"
+          },
+          {
+            "name": "multiplier_opp",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "multiplier_opp",
+            "sourceProviderType": "Double"
+          },
+          {
+            "name": "model_total_price_value_rte",
+            "dataType": "double",
+            "isHidden": true,
+            "sourceColumn": "model_total_price_value_rte",
+            "sourceProviderType": "Double"
+          },
+          {
+            "name": "Sales Group Name",
+            "dataType": "string",
+            "sourceColumn": "sales_group_nm"
+          },
+          {
+            "name": "Account Name",
+            "dataType": "string",
+            "sourceColumn": "account_nm"
+          },
+          {
+            "name": "Gregorian Year_Quarter Order",
+            "dataType": "int64",
+            "sourceColumn": "gregorian_year_quarter_ord",
+            "formatString": "0"
+          },
+          {
+            "name": "Range Members Year_Quarter Order",
+            "dataType": "int64",
+            "sourceColumn": "range_members_year_quarter_ord",
+            "formatString": "0"
+          },
+          {
+            "name": "Production End Date",
+            "dataType": "string",
+            "sourceColumn": "prod_end_dt"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Production_Outlook",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Odbc.Query(\"provider=MSDASQL;dsn=Sentry_Impala\", \"SELECT",
+                "value_type_dsc",
+                ",opportunity_id",
+                ",line_item_id",
+                ",opportunity_type_dsc",
+                ",business_unit_cd",
+                ",product_application_nm",
+                ",product_category",
+                ",product_status_dsc",
+                ",gregorian_year_quarter_nbr",
+                ",gregorian_year_quarter_ord",
+                ",range_members_year_quarter_nbr",
+                ",range_members_year_quarter_ord",
+                ",multiplier_rte",
+                ",product_price_amt",
+                ",multiplier_opp",
+                ",model_total_price_value_rte",
+                ",sales_group_nm",
+                ",account_nm",
+                ",prod_end_dt",
+                "FROM iah_crm_analysis.v_f_production_forecast",
+                " LIMIT 20\") in    Source"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Multiplier Rte",
+            "expression": "SUM([multiplier_rte])"
+          },
+          {
+            "name": "Multiplier Opp",
+            "expression": "SUM([multiplier_opp])"
+          },
+          {
+            "name": "Model Total_Price Number",
+            "expression": "SUM([model_total_price_value_rte])",
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Product Price Amount",
+            "expression": "SUM([product_price_amt])",
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "SELECT",
+              "value_type_dsc",
+              ",opportunity_id",
+              ",line_item_id",
+              ",opportunity_type_dsc",
+              ",business_unit_cd",
+              ",product_application_nm",
+              ",product_category",
+              ",product_status_dsc",
+              ",gregorian_year_quarter_nbr",
+              ",gregorian_year_quarter_ord",
+              ",range_members_year_quarter_nbr",
+              ",range_members_year_quarter_ord",
+              ",multiplier_rte",
+              ",product_price_amt",
+              ",multiplier_opp",
+              ",model_total_price_value_rte",
+              ",sales_group_nm",
+              ",account_nm",
+              ",prod_end_dt",
+              "FROM iah_crm_analysis.v_f_production_forecast",
+              " LIMIT 20"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "Production_Outlook"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>SELECT",
+              "value_type_dsc",
+              ",opportunity_id",
+              ",line_item_id",
+              ",opportunity_type_dsc",
+              ",business_unit_cd",
+              ",product_application_nm",
+              ",product_category",
+              ",product_status_dsc",
+              ",gregorian_year_quarter_nbr",
+              ",gregorian_year_quarter_ord",
+              ",range_members_year_quarter_nbr",
+              ",range_members_year_quarter_ord",
+              ",multiplier_rte",
+              ",product_price_amt",
+              ",multiplier_opp",
+              ",model_total_price_value_rte",
+              ",sales_group_nm",
+              ",account_nm",
+              ",prod_end_dt",
+              "FROM iah_crm_analysis.v_f_production_forecast",
+              " LIMIT 20</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "Admin",
+        "modelPermission": "administrator",
+        "members": [
+          {
+            "memberName": "AMR\\SMIT Admin",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3387486"
+          },
+          {
+            "memberName": "AMR\\IAH_CRM_SSAS_ProdAccess",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-4779930"
+          }
+        ]
+      },
+      {
+        "name": "Data Ops WW",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_DataOps_WW_Data",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2936128"
+          }
+        ]
+      },
+      {
+        "name": "Finance",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_FIN_WW_Data",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2933072"
+          }
+        ]
+      },
+      {
+        "name": "CRM Program Member",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_CRM_Program_Member",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2950047"
+          },
+          {
+            "memberName": "AMR\\SABI_SEGBI_PO",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435440"
+          },
+          {
+            "memberName": "AMR\\SABI_DataOps_WW_Data",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2936128"
+          },
+          {
+            "memberName": "AMR\\SABI_FIN_WW_Data",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2933072"
+          },
+          {
+            "memberName": "AMR\\SABI_CRM_Read_All",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3557304"
+          }
+        ]
+      },
+      {
+        "name": "Sales Groups",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\sys_smgdashboardusr",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2874428"
+          }
+        ]
+      },
+      {
+        "name": "Account Acer",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ACER",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069431"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Acer\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CorpAcer\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Samsung",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_SAMSUNG",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069432"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Samsung\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account LGE",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_LGE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069433"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"LGE\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"ALGE\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"LLGE\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"ILGE\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"OLGE\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Asustek",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ASUSTEK",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069434"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Asus\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"AsusTor\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Foxconn",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_FOXCONN",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069435"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Foxconn\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Gigabyte",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_GIGABYTE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069437"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Gigabyte\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Toshiba",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_TOSHIBA",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069438"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Toshiba\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Quanta",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_QUANTA",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069439"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Quanta\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Panasonic",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_PANASONIC",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069440"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"panasonic\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Hitachi",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HITACHI",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069441"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Hitachi\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account NEC",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_NEC",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069442"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"NEC \", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"rnec\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"nnec\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"enec\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Snec\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"inec\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"ynec\", Production_Outlook[Account Name], 1, -1) = -1)"
+          }
+        ]
+      },
+      {
+        "name": "Account Wistrom",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_WISTROM",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069443"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Wistrom\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account HP",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HP",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069444"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"HP \", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"BHP\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Hewlett\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Dell",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_DELL",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069445"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Dell\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"eDell\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"aDell\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Della\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"sDell\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Dello\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"nDell\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Delle\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account IBM",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_IBM",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069446"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"IBM\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Lenovo",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_LENOVO",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069447"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Lenovo\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Amazon",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_AMAZON",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272379"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Amazon\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"Amazona\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"Amazonia\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Apple",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_APPLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272380"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Apple\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"Rapple\", Production_Outlook[Account Name], 1, -1) = -1 && SEARCH(\"AppleWh\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Cisco",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_CISCO",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272381"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Cisco\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"nCisco\", Production_Outlook[Account Name], 1, -1) = -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Fujitsu",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_FUJITSU",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272382"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Fujitsu\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Google",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_GOOGLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272383"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Google\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Huawei",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HUAWEI",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272385"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Huawei\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Microsoft",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_MICROSOFT",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272384"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Microsoft\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Account Oracle",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ORACLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272386"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Oracle\", Production_Outlook[Account Name], 1, -1) > -1"
+          }
+        ]
+      },
+      {
+        "name": "Support",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMIT Support",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-2949365"
+          },
+          {
+            "memberName": "AMR\\IAH_CRM_SSAS_PreProdAccess",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-4381228"
+          }
+        ]
+      },
+      {
+        "name": "BU CCG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_CCG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435448"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_CCG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435454"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"CCG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"CCG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU DCG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_DCG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435444"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_DCG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435451"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"DCG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"DCG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU IOTG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_IOTG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435443"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_IOTG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435450"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"IOTG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"IOTG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU NSG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_NSG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435447"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_NSG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435453"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"NSG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"NSG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU NTG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_NTG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435445"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_NTG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435452"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"NTG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"NTG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU PSG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_PSG_Edit",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435449"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_PSG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3435455"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"PSG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"AlteraSG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"PSG Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU GMP",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_GMP_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3788789"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_GMP_Editor",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3795544"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Americas Sales Territory\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP APJ Sales Territory\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Brazil Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP EMEA Sales Territory\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP France Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Germany Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP India Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Japan Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Korea Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Mexico Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Russia Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP Taiwan Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1 || SEARCH(\"GMP UK Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU USSales",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_USSales_Editor",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849107"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_USSales_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849113"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"US Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU PRCSales",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_PRCSales_Editor",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849409"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_PRCSales_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849410"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"PRC Sales Group\", Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU ADG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_BU_ADG_Editor",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849408"
+          },
+          {
+            "memberName": "AMR\\SABI_BU_ADG_Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3849407"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"ADG\",Production_Outlook[Business Unit],1,-1)>-1 || SEARCH(\"Automotive Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "BU DCG HPC",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\HPC Analytics Developer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3754356"
+          },
+          {
+            "memberName": "AMR\\HPC Analytics Viewer",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3754357"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"HPC\",Production_Outlook[Product Application],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - ADG",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - Auto Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3800172"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"Automotive Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"ADG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - All BU Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - All BU Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784681"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - CCG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - CCG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784683"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"CCG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"CCG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - DCG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - DCG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784684"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"DCG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"DCG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - IOTG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - IOTG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784682"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"IOTG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"IOTG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - NSG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - NSG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784686"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"NSG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"NSG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - NTG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - NTG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784685"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"NTG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"NTG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - PSG Insider",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - PSG Insider",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784687"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"PSG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"PSG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Americas Sales Territory",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Americas Sales Territory",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784678"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Americas Sales Territory\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - APJ Sales Territory",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - APJ Sales Territory",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784679"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP APJ Sales Territory\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Brazil Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Brazil Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784668"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Brazil Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - EMEA Sales Territory",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - EMEA Sales Territory",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784680"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP EMEA Sales Territory\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - France Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - France Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784669"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP France Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Germany Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Germany Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784670"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Germany Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Global Markets and Partners",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Global Markets and Partners",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784690"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP*\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - India Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - India Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784671"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP India Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Japan Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Japan Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784672"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Japan Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Korea Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Korea Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784673"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Korea Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Mexico Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Mexico Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784674"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Mexico Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - PRC Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - PRC Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784667"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"PRC Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Russia Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Russia Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784675"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Russia Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - Taiwan Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - Taiwan Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784676"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP Taiwan Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - UK Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - UK Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784677"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"GMP UK Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Territories - US Sales Group",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Territories - US Sales Group",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3784666"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"US Sales Group\",Production_Outlook[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Acer",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ACER",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069431"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Acer\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Apple",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_APPLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272380"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Apple\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Asus",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ASUSTEK",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069434"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Asus\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Dell",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_DELL",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069445"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Dell\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - HPI",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HP",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069444"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"HPI\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Lenovo",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_LENOVO",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069447"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Lenovo\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Microsoft",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_MICROSOFT",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272384"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Microsoft\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Samsung",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_SAMSUNG",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3069432"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Samsung\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"CCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - DCG Other",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_DCG_OTHER",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882471"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Tencent\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Inspur\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"HPE\", Production_Outlook[Account Name], 1, -1) <= 0 && SEARCH(\"Facebook\", Production_Outlook[Account Name], 1, -1) <= 0 && SEARCH(\"Baidu\", Production_Outlook[Account Name], 1, -1) <= 0 && SEARCH(\"Alibaba\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Amazon\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Cisco\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Google/Alphabet\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Huawei\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"Oracle\", Production_Outlook[Account Name], 1, -1) < 1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1)"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Tencent",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_TENCENT",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882474"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Tencent\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1)"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Inspur",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_INSPUR",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882475"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Inspur\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1)"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - HPE",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HPE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882476"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"HPE\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1)"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Facebook",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_FACEBOOK",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882477"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Facebook\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1)"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Baidu",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_Baidu",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3557302"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Baidu\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Alibaba",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ALIBABA",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882478"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Alibaba\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Amazon",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_AMAZON",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272379"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Amazon\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Cisco",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_CISCO",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272381"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Cisco\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Google-Alphabet",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_GOOGLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272383"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Google/Alphabet\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Huawei",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_HUAWEI",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272385"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Huawei\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - Oracle",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ORACLE",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3272386"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "(SEARCH(\"Oracle\", Production_Outlook[Account Name], 1, -1) > -1 && SEARCH(\"DCG Sales\",[Sales Group Name],1,-1)>-1 )"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - IOTG Accounts",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_IOTG_ACCOUNTS",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882470"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "Production_Outlook[Account Name] <> BLANK() && SEARCH(\"IOTG Sales\",[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Accounts - ASG Accounts",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SABI_ACCT_ASG_ACCOUNTS",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3882469"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "Production_Outlook[Account Name] <> BLANK() && SEARCH(\"Automotive Sales\",[Sales Group Name],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - CCG Level",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - CCG Level - 1",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3905933"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"CCG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"CCG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      },
+      {
+        "name": "SMG Analytics - Business Unit - DCG Level",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\SMG Analytics - Business Unit - DCG Level - 1",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-3905934"
+          }
+        ],
+        "tablePermissions": [
+          {
+            "name": "Production_Outlook",
+            "filterExpression": "SEARCH(\"DCG Sales Group\",[Sales Group Name],1,-1)>-1 || SEARCH(\"DCG\",Production_Outlook[Business Unit],1,-1)>-1"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "Description",
+        "value": "Production outlook data for Salesforce opportunity management"
+      },
+      {
+        "name": "Data Domain",
+        "value": "Sales CRM Domain"
+      },
+      {
+        "name": "Location",
+        "value": "SSAS Server=IAH_CRM_Production_Outlook.intel.com;Database=IAH_CRM_Production_Outlook"
+      },
+      {
+        "name": "Access",
+        "value": "IAH_CRM_Production_Outlook.intel.com"
+      },
+      {
+        "name": "Owner",
+        "value": "richard.mason@intel.com"
+      },
+      {
+        "name": "Support Plan",
+        "value": "https://it.intel.com/#/incident/445/4786"
+      },
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "500"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
